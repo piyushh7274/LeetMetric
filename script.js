@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function(){
     const mediumLabel = document.getElementById("medium-label");
     const hardLabel = document.getElementById("hard-label");
     const cardStatsContainer = document.querySelector(".stats-cards");
+    const progress = document.querySelector(".progress");
+
 
 // RETURN TRUE OR FALSE BASED ON REGEX--->
     function validateUsername(username){
@@ -55,7 +57,14 @@ document.addEventListener("DOMContentLoaded", function(){
                 throw new Error("unable to fetch data");
             }
             const parsedData = await response.json();
-            console.log("Logging data", parsedData);
+            console.log("Logging data: ", JSON.stringify(parsedData, null, 2));
+            console.log("Logging data: ", parsedData);
+
+            if (!parsedData || !parsedData.data || !parsedData.data.allQuestionsCount || !parsedData.data.matchedUser) {
+                progress.innerHTML = `<p>Invalid or incomplete data received from API.</p>`;
+                return;
+            }
+            
 
             displayUserData(parsedData)
         }
@@ -67,12 +76,28 @@ document.addEventListener("DOMContentLoaded", function(){
             searchButton.disabled = false;
         }
       }
+      function updateProgress(solved, Total, label, circle){
+        const progressDegree = (solved/totalQues)*100;
+        circle.style.setproperty("--progress-degree", `${progressDegree}%`);
+        label.textContent = `${solved}/${totalQues}`;
+      }
 
     function displayUserData(parsedData){
-        const totalHardQues = parsedData.Data.allQuestionsCount[0].count;
-        const totalEasyQues = parsedData.Data.allQuestionsCount[0].count;
-        const totalmedigambling = parsedData.Data.allQuestionsCount[0].count;
-        // const totalHardQues = parsedData.Data.allQuestionsCount[0].count;
+        const totalQues = parsedData.Data.allQuestionsCount[0].count;
+        const totalEasyQues = parsedData.Data.allQuestionsCount[1].count;
+        const totalMediumQues = parsedData.Data.allQuestionsCount[2].count;
+        const totalHardQues = parsedData.Data.allQuestionsCount[3].count;
+        
+        const solvedTotalQues = parsedData.data.matchedUser.submitStats.acSubmissionNum[0].count;
+        const solvedTotalEasyQues = parsedData.data.matchedUser.submitStats.acSubmissionNum[1].count;
+        const solvedTotalMediumQues = parsedData.data.matchedUser.submitStats.acSubmissionNum[2].count;
+        const solvedTotalHardQues = parsedData.data.matchedUser.submitStats.acSubmissionNum[3].count;
+
+        updateProgress(solvedTotalEasyQues, totalEasyQues, easyLabel, easyProgressCircle)
+        updateProgress(solvedTotalMediumQues, totalMediumQues, mediumLabel, mediumProgressCircle)
+        updateProgress(solvedTotalHardQues, totalHardQues, hardLabel, hardProgressCircle)
+
+
 
 
 
