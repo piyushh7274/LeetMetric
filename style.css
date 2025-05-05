@@ -75,7 +75,9 @@ body{
     font-size: 16px;
     columns: white;
     font-weight: 700;
+    
     background: conic-gradient(#299f5d var(--progress-degree, 0%), #283a2e 0%);
+    flex-direction: column;
 }
 .circle-span{
     position: relative;
@@ -90,4 +92,27 @@ body{
 .progress-item:hover{
     transform: scale(1.1);
     transition: transform 0.3s ease;
+}
+.stats-cards{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-evenly;
+
+}
+h4{
+    padding: 0.5rem;
+}
+.card{
+    background-color: rgb(94, 76, 90);
+    width: 225px;
+    max-width: 290px;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    min-height: 3rem;
+
+    
 }
