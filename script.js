@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
+
     
     const searchButton = document.getElementById("search-button");
     const usernameInput = document.getElementById("user-input");
@@ -35,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function(){
             searchButton.disabled = true;
 
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/' ;
-
             const targetUrl = 'https://leetcode.com/graphql/';
     
             const myHeaders = new Headers();
@@ -57,13 +57,13 @@ document.addEventListener("DOMContentLoaded", function(){
                 throw new Error("unable to fetch data");
             }
             const parsedData = await response.json();
-            console.log("Logging data: ", JSON.stringify(parsedData, null, 2));
+            // console.log("Logging data: ", JSON.stringify(parsedData, null, 2));
             console.log("Logging data: ", parsedData);
 
-            if (!parsedData || !parsedData.data || !parsedData.data.allQuestionsCount || !parsedData.data.matchedUser) {
-                progress.innerHTML = `<p>Invalid or incomplete data received from API.</p>`;
-                return;
-            }
+            // if (!parsedData || !parsedData.data || !parsedData.data.allQuestionsCount || !parsedData.data.matchedUser) {
+            //     progress.innerHTML = `<p>Invalid or incomplete data received from API.</p>`;
+            //     return;
+            // }
             
 
             displayUserData(parsedData)
@@ -76,17 +76,17 @@ document.addEventListener("DOMContentLoaded", function(){
             searchButton.disabled = false;
         }
       }
-      function updateProgress(solved, Total, label, circle){
-        const progressDegree = (solved/totalQues)*100;
-        circle.style.setproperty("--progress-degree", `${progressDegree}%`);
-        label.textContent = `${solved}/${totalQues}`;
+      function updateProgress(solved, total, label, circle){
+        const progressDegree = (solved/total)*100;
+        circle.style.setProperty("--progress-degree", `${progressDegree}%`);
+        label.textContent = `${solved}/${total}`;
       }
 
     function displayUserData(parsedData){
-        const totalQues = parsedData.Data.allQuestionsCount[0].count;
-        const totalEasyQues = parsedData.Data.allQuestionsCount[1].count;
-        const totalMediumQues = parsedData.Data.allQuestionsCount[2].count;
-        const totalHardQues = parsedData.Data.allQuestionsCount[3].count;
+        const totalQues = parsedData.data.allQuestionsCount[0].count;
+        const totalEasyQues = parsedData.data.allQuestionsCount[1].count;
+        const totalMediumQues = parsedData.data.allQuestionsCount[2].count;
+        const totalHardQues = parsedData.data.allQuestionsCount[3].count;
         
         const solvedTotalQues = parsedData.data.matchedUser.submitStats.acSubmissionNum[0].count;
         const solvedTotalEasyQues = parsedData.data.matchedUser.submitStats.acSubmissionNum[1].count;
@@ -99,7 +99,23 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 
+        const cardsData = [
+            {label: "Overall Submissions:", value:parsedData.data.matchedUser.submitStats.totalSubmissionNum[0].submissions },
+            {label: "Overall Easy Submissions:", value:parsedData.data.matchedUser.submitStats.totalSubmissionNum[1].submissions },
+            {label: "Overall Medium Submissions:", value:parsedData.data.matchedUser.submitStats.totalSubmissionNum[2].submissions },
+            {label: "Overall Hard Submissions:", value:parsedData.data.matchedUser.submitStats.totalSubmissionNum[3].submissions },
+        ];
 
+
+        console.log("card ka data: " , cardsData);
+
+        cardStatsContainer.innerHTML = cardsData.map(
+            data => 
+                    `<div class="card">
+                    <h4>${data.label}</h4>
+                    <p>${data.value}</p>
+                    </div>`
+        ).join("")
 
     }
 
